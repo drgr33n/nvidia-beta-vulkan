@@ -6,12 +6,21 @@
 # Contributor: Thomas Baechler <thomas@archlinux.org>
 # Contributor: James Rayner <iphitus@gmail.com>
 # Contributor: Alex Luberg <alex@luberg.me>
+# Contributor: Daniel Bermond <dbermond@archlinux.org>
+# Contributor: Sibren Vasse <arch at sibrenvasse dot nl>
+# Contributor: Matt Welch <matt dot welch at gmail dot com>
+# Contributor: Anish Bhatt <anish at gatech dot edu>
+# Contributor: Det <nimetonmaili gmail a-dot com>
+# Contributor: Alucryd <alucryd at gmail dot com>
+# Contributor: Jason Melton <jason dot melton at gmail dot com>
+# Contributor: Youpi <max dot flocard at gmail dot com>
+# Contributor: sl1pkn07 <sl1pkn07 at gmail dot com>
 
-pkgbase=nvidia-vulkan
-pkgname=('nvidia-vulkan' 'nvidia-vulkan-dkms' 'nvidia-vulkan-utils' 'opencl-nvidia-vulkan' 'lib32-nvidia-vulkan-utils' 'lib32-opencl-nvidia-vulkan')
+pkgbase=nvidia-beta-vulkan
+pkgname=('nvidia-beta-vulkan' 'nvidia-beta-vulkan-dkms' 'nvidia-beta-vulkan-utils' 'opencl-nvidia-beta-vulkan' 'lib32-nvidia-beta-vulkan-utils' 'lib32-opencl-nvidia-beta-vulkan')
 pkgver="470.42.01"
 pkgrel=1
-pkgdesc='NVIDIA drivers for linux (vulkan)'
+pkgdesc='NVIDIA Beta drivers for linux (vulkan)'
 arch=('x86_64')
 url="https://us.download.nvidia.com/"
 makedepends=('libglvnd' 'linux' 'linux-headers')
@@ -59,9 +68,9 @@ build() {
     make SYSSRC=/usr/src/linux module
 }
 
-package_nvidia-vulkan() {
-    pkgdesc="NVIDIA drivers for linux (vulkan developer branch)"
-    depends=('linux' "nvidia-vulkan-utils=${pkgver}" 'libglvnd')
+package_nvidia-beta-vulkan() {
+    pkgdesc="NVIDIA Beta drivers for linux (vulkan)"
+    depends=('linux' "nvidia-beta-vulkan-utils=${pkgver}" 'libglvnd')
     provides=("nvidia=$pkgver")
     conflicts+=('nvidia')
     
@@ -77,9 +86,9 @@ package_nvidia-vulkan() {
     install -Dt "${pkgdir}/usr/share/licenses/${pkgname}" -m644 "${srcdir}/${_pkg}/LICENSE"
 }
 
-package_nvidia-vulkan-dkms() {
-    pkgdesc="NVIDIA driver sources for linux (vulkan developer branch)"
-    depends=('dkms' "nvidia-vulkan-utils=${pkgver}" 'libglvnd')
+package_nvidia-beta-vulkan-dkms() {
+    pkgdesc="NVIDIA Beta driver sources for linux (vulkan dkms)"
+    depends=('dkms' "nvidia-beta-vulkan-utils=${pkgver}" 'libglvnd')
     provides=("nvidia=$pkgver")
     conflicts+=('nvidia')
 
@@ -94,7 +103,7 @@ package_nvidia-vulkan-dkms() {
     install -Dt "${pkgdir}/usr/share/licenses/${pkgname}" -m644 "${srcdir}/${_pkg}/LICENSE"
 }
 
-package_opencl-nvidia-vulkan() {
+package_opencl-nvidia-beta-vulkan() {
     pkgdesc="OpenCL implemention for NVIDIA"
     depends=('zlib')
     optdepends=('opencl-headers: headers necessary for OpenCL development')
@@ -113,17 +122,17 @@ package_opencl-nvidia-vulkan() {
     ln -s nvidia "${pkgdir}/usr/share/licenses/opencl-nvidia-vulkan"
 }
 
-package_nvidia-vulkan-utils() {
-    pkgdesc="NVIDIA drivers utilities"
+package_nvidia-beta-vulkan-utils() {
+    pkgdesc="NVIDIA Beta drivers utilities"
     depends=('xorg-server' 'libglvnd' 'egl-wayland')
     optdepends=('gtk2: nvidia-settings (GTK+ v2)'
                 'gtk3: nvidia-settings (GTK+ v3)'
                 'xorg-server-devel: nvidia-xconfig'
-                'opencl-nvidia-vulkan: OpenCL support')
+                'opencl-nvidia-beta-vulkan: OpenCL support')
     conflicts=('nvidia-utils' 'nvidia-libgl' 'nvidia-settings')
     provides=("nvidia-utils=${pkgver}" 'vulkan-driver' 'opengl-driver' 'nvidia-libgl' 'nvidia-settings')
     replaces=('nvidia-libgl')
-    install="nvidia-vulkan-utils.install"
+    install="nvidia-beta-vulkan-utils.install"
 
     cd "${_pkg}"
 
@@ -244,8 +253,8 @@ package_nvidia-vulkan-utils() {
     create_links
 }
 
-package_lib32-opencl-nvidia-vulkan() {
-    pkgdesc="OpenCL implemention for NVIDIA (32-bit)"
+package_lib32-opencl-nvidia-beta-vulkan() {
+    pkgdesc="OpenCL implemention for NVIDIA Beta (32-bit)"
     depends=('lib32-zlib' 'lib32-gcc-libs')
     optdepends=('opencl-headers: headers necessary for OpenCL development')
     provides=('lib32-opencl-driver' "lib32-opencl-nvidia=${pkgver}")
@@ -263,10 +272,10 @@ package_lib32-opencl-nvidia-vulkan() {
     ln -s lib32-nvidia-utils "${pkgdir}/usr/share/licenses/lib32-opencl-nvidia-vulkan"
 }
 
-package_lib32-nvidia-vulkan-utils() {
-    pkgdesc="NVIDIA drivers utilities (32-bit)"
-    depends=('lib32-zlib' 'lib32-gcc-libs' 'lib32-libglvnd' 'nvidia-vulkan-utils')
-    optdepends=('lib32-opencl-nvidia-vulkan')
+package_lib32-nvidia-beta-vulkan-utils() {
+    pkgdesc="NVIDIA Beta drivers utilities (32-bit)"
+    depends=('lib32-zlib' 'lib32-gcc-libs' 'lib32-libglvnd' 'nvidia-beta-vulkan-utils')
+    optdepends=('lib32-opencl-nvidia-beta-vulkan')
     conflicts=('lib32-nvidia-utils' 'lib32-nvidia-libgl')
     provides=("lib32-nvidia-utils=${pkgver}" 'lib32-vulkan-driver' 'lib32-opengl-driver' 'lib32-nvidia-libgl')
     replaces=('lib32-nvidia-libgl')
