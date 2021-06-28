@@ -19,7 +19,7 @@ jobs:
         uses: drgr33n/arch-pkgbuild-builder@v1.16
         with:
           target: 'pkgbuild'
-          pkgname: '.'
+          pkgname: 'nvidia-vulkan-dkms'
 
       - name: yaml-lint
         uses: ibiqlik/action-yamllint@v0.0.2
