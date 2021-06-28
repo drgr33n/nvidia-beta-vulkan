@@ -53,20 +53,6 @@ prepare() {
 
     sed -i "s/static int nv_drm_vma_fault(struct vm_fault \*vmf)/#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 1, 0)\nstatic int nv_drm_vma_fault(struct vm_fault \*vmf)\n#else\nstatic vm_fault_t nv_drm_vma_fault(struct vm_fault \*vmf)\n#endif/g" kernel/nvidia-drm/nvidia-drm-gem-nvkms-memory.c
 
-    cp -a kernel kernel-dkms
-    cd kernel-dkms
-    sed -i "s/__VERSION_STRING/${pkgver}/" dkms.conf
-    sed -i 's/__JOBS/`nproc`/' dkms.conf
-    sed -i 's/__DKMS_MODULES//' dkms.conf
-    sed -i '$iBUILT_MODULE_NAME[0]="nvidia"\
-DEST_MODULE_LOCATION[0]="/kernel/drivers/video"\
-BUILT_MODULE_NAME[1]="nvidia-uvm"\
-DEST_MODULE_LOCATION[1]="/kernel/drivers/video"\
-BUILT_MODULE_NAME[2]="nvidia-modeset"\
-DEST_MODULE_LOCATION[2]="/kernel/drivers/video"\
-BUILT_MODULE_NAME[3]="nvidia-drm"\
-DEST_MODULE_LOCATION[3]="/kernel/drivers/video"' dkms.conf
-
 }
 
 build() {
