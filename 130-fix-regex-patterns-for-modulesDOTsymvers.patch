@@ -1,0 +1,18 @@
+@@ -4985,7 +4985,7 @@
+     module_symvers_sanity_check)
+         #
+         # Check whether Module.symvers exists and contains at least one
+-        # EXPORT_SYMBOL* symbol from vmlinux
++        # EXPORT_SYMBOL* symbol from *vmlinux
+         #
+ 
+         if [ -n "$IGNORE_MISSING_MODULE_SYMVERS" ]; then
+@@ -4995,7 +4995,7 @@
+         TAB='	'
+ 
+         if [ -f "$OUTPUT/Module.symvers" ] && \
+-             grep -e "^[^${TAB}]*${TAB}[^${TAB}]*${TAB}\+vmlinux" \
++             grep -e "^[^${TAB}]*${TAB}[^${TAB}]*${TAB}\+*vmlinux" \
+                      "$OUTPUT/Module.symvers" >/dev/null 2>&1; then
+             exit 0
+         fi

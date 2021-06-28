@@ -10,10 +10,10 @@
 pkgbase=nvidia-vulkan
 pkgname=('nvidia-vulkan' 'nvidia-vulkan-dkms' 'nvidia-vulkan-utils' 'opencl-nvidia-vulkan' 'lib32-nvidia-vulkan-utils' 'lib32-opencl-nvidia-vulkan')
 pkgver="470.42.01"
-pkgrel=2
+pkgrel=1
 pkgdesc='NVIDIA drivers for linux (vulkan)'
 arch=('x86_64')
-url="https://developer.nvidia.com/vulkan-driver"
+url="https://us.download.nvidia.com/"
 makedepends=('libglvnd' 'linux' 'linux-headers')
 license=('custom')
 options=('!strip')
@@ -22,12 +22,14 @@ source=("https://us.download.nvidia.com/XFree86/Linux-${CARCH}/${pkgver}/${_pkg}
         'nvidia-drm-outputclass.conf'
         'nvidia-vulkan-utils.sysusers'
         '110-nvidia-change-dkms-conf.patch'
-        '120-nvidia-linux-rt-gift.patch')
+        '120-nvidia-linux-rt-gift.patch'
+        '130-fix-regex-patterns-for-modulesDOTsymvers.patch')
 sha512sums=('f933e249b9e0b043283ba164d56bd235240a34098e4ab9d1070809e17f8c2cd24d7319217c02c2417414f4c811216181d7ab8842755cd0d25b00ee51de70b2cc'
             'de7116c09f282a27920a1382df84aa86f559e537664bb30689605177ce37dc5067748acf9afd66a3269a6e323461356592fdfc624c86523bf105ff8fe47d3770'
             '4b3ad73f5076ba90fe0b3a2e712ac9cde76f469cd8070280f960c3ce7dc502d1927f525ae18d008075c8f08ea432f7be0a6c3a7a6b49c361126dcf42f97ec499'
             'e8afb7adbfe816372dff8a955e84f5b01adf32fb4a00abe72b7ee4e6ebd9f5a3e8bed4cbe0311da936054eeeaec93c12e16cdaab7f8c707bf875d3194ded6739'
-            '5f254b86c1ecc0873d31e6c48f9ba7995f1268217e8c059f6b8fb254a43cb052358eb9195f83388486992774c0400d861b2aa33a48b78ae6eda1c30e497f000d')
+            '5f254b86c1ecc0873d31e6c48f9ba7995f1268217e8c059f6b8fb254a43cb052358eb9195f83388486992774c0400d861b2aa33a48b78ae6eda1c30e497f000d'
+            '007819cccaa919b5a44e7eb6201012d2d1cf3e5a26aacec505d5560d0973b2b63f9f83c7ded3a9fde611e8064d2cc3af5895fc5d38c0f4d305e00b4a2ee06e46')
 
 create_links() {
     # create soname links
@@ -46,12 +48,7 @@ prepare() {
 
     patch -Np1 -i "../110-nvidia-change-dkms-conf.patch"
     patch -Np1 -i "../120-nvidia-linux-rt-gift.patch"
-
-    # Fixing regex pattern for Module.symvers
-    sed -i "s/${TAB}vmlinux/${TAB}*vmlinux/g" kernel/conftest.sh
-    sed -i "s/TAB='    '/TAB='\\\t'/g" kernel/conftest.sh
-
-    sed -i "s/static int nv_drm_vma_fault(struct vm_fault \*vmf)/#if LINUX_VERSION_CODE < KERNEL_VERSION(5, 1, 0)\nstatic int nv_drm_vma_fault(struct vm_fault \*vmf)\n#else\nstatic vm_fault_t nv_drm_vma_fault(struct vm_fault \*vmf)\n#endif/g" kernel/nvidia-drm/nvidia-drm-gem-nvkms-memory.c
+    patch -Np1 -i "../130-fix-regex-patterns-for-modulesDOTsymvers.patch"
 
     cp -a kernel kernel-dkms
 
@@ -135,6 +132,7 @@ package_nvidia-vulkan-utils() {
 
     # GLX extension module for X
     install -D -m755 "libglxserver_nvidia.so.${pkgver}" "${pkgdir}/usr/lib/nvidia/xorg/libglxserver_nvidia.so.${pkgver}"
+
     # Ensure that X finds glx
     ln -s "libglxserver_nvidia.so.${pkgver}" "${pkgdir}/usr/lib/nvidia/xorg/libglxserver_nvidia.so.1"
     ln -s "libglxserver_nvidia.so.${pkgver}" "${pkgdir}/usr/lib/nvidia/xorg/libglxserver_nvidia.so"
