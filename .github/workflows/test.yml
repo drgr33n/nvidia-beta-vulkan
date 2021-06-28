@@ -16,7 +16,7 @@ jobs:
 
       - name: Validate PKGBUILD
         id: validate-pkgbuild
-        uses: drgr33n/arch-pkgbuild-builder@v1.16
+        uses: drgr33n/arch-pkgbuild-builder@v1.18
         with:
           target: 'pkgbuild'
           pkgname: 'nvidia-vulkan-dkms'
