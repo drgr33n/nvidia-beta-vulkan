@@ -1,3 +1,5 @@
+--- a/kernel/conftest.sh
++++ b/kernel/conftest.sh
 @@ -4985,7 +4985,7 @@
      module_symvers_sanity_check)
          #
